@@ -1,0 +1,70 @@
+import time
+
+class MotorNeuronCodec:
+    def __init__(self):
+        # Load action potential to nerve impulse mappings
+        self.action_to_nerve = {
+            "lift": "hands",
+            "walk": "legs",
+            "talk": "lips",
+            "eat": "mouth",
+            "run": "fast legs",
+            "sing": "mouth",
+            "anger": "jaws",
+            "carry": "hands",
+            "swallow": "throat",
+            "chew": "teeth and tongue",
+            # ... add more from the provided lists
+        }
+
+        self.nerve_codes = {
+            "hands": "IMP_HANDS_001",
+            "legs": "IMP_LEGS_002",
+            "lips": "IMP_LIPS_003",
+            "mouth": "IMP_MOUTH_004",
+            "fast legs": "IMP_LEGS_FAST_005",
+            "throat": "IMP_THROAT_006",
+            "teeth and tongue": "IMP_TEETH_TONGUE_007",
+            "jaws": "IMP_JAWS_008",
+            # ... extend with more codes
+        }
+
+    def capture_thought(self, thought):
+        """Simulate capturing a thought from the Exit Point."""
+        return thought.lower()
+
+    def convert_to_nerve_impulse(self, action):
+        """Convert action potential to nerve impulse."""
+        return self.action_to_nerve.get(action, "UNKNOWN_ACTION")
+
+    def get_nerve_code(self, nerve):
+        """Get the nerve impulse code."""
+        return self.nerve_codes.get(nerve, "UNKNOWN_NERVE")
+
+    def execute_motor_command(self, nerve_code):
+        """Simulate sending the nerve impulse to the body."""
+        print(f"🚀 Executing Motor Command: {nerve_code}")
+        time.sleep(1)
+        print("✅ Command executed.")
+
+    def process_thought(self, thought):
+        """Full pipeline: thought -> action -> nerve impulse -> execution."""
+        action = self.capture_thought(thought)
+        nerve = self.convert_to_nerve_impulse(action)
+        nerve_code = self.get_nerve_code(nerve)
+        self.execute_motor_command(nerve_code)
+
+# Interactive CLI
+def main():
+    codec = MotorNeuronCodec()
+    print("=== 🧠 Motor Neuron Codec ===")
+    print("Available actions: lift, walk, talk, eat, run, sing, anger, carry, swallow, chew...")
+
+    while True:
+        thought = input("\nEnter a thought (e.g., 'lift'): ").strip()
+        if thought == "exit":
+            break
+        codec.process_thought(thought)
+
+if __name__ == "__main__":
+    main()
