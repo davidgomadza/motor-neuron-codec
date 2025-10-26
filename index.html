@@ -1,70 +1,180 @@
-import time
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Motor Neuron Codec</title>
+    <style>
+        body {
+            font-family: 'Courier New', monospace;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #00ff88;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background: rgba(0, 40, 80, 0.8);
+            border: 1px solid #00ff88;
+            border-radius: 10px;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #00ff88;
+        }
+        
+        .input-area {
+            margin-bottom: 20px;
+        }
+        
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            background: #000;
+            color: #00ff88;
+            border: 1px solid #00ff88;
+            border-radius: 5px;
+            margin-bottom: 10px;
+        }
+        
+        button {
+            background: linear-gradient(45deg, #00ff88, #00cc66);
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        button:hover {
+            background: linear-gradient(45deg, #00cc66, #00aa44);
+        }
+        
+        .output-area {
+            background: #000;
+            color: #00ff88;
+            padding: 15px;
+            border: 1px solid #00ff88;
+            border-radius: 5px;
+            min-height: 100px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .command-log {
+            margin-top: 10px;
+            padding: 10px;
+            background: #001122;
+            border-radius: 5px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🧠 Motor Neuron Codec</h1>
+        
+        <div class="input-area">
+            <p>Available actions: lift, walk, talk, eat, run, sing, anger, carry, swallow, chew...</p>
+            <input type="text" id="thoughtInput" placeholder="Enter a thought (e.g., 'lift')">
+            <button onclick="processThought()">Execute Thought</button>
+        </div>
+        
+        <div class="output-area">
+            <div id="output">Output will appear here...</div>
+            <div class="command-log" id="commandLog"></div>
+        </div>
+    </div>
 
-class MotorNeuronCodec:
-    def __init__(self):
-        # Load action potential to nerve impulse mappings
-        self.action_to_nerve = {
-            "lift": "hands",
-            "walk": "legs",
-            "talk": "lips",
-            "eat": "mouth",
-            "run": "fast legs",
-            "sing": "mouth",
-            "anger": "jaws",
-            "carry": "hands",
-            "swallow": "throat",
-            "chew": "teeth and tongue",
-            # ... add more from the provided lists
+    <script>
+        class MotorNeuronCodec {
+            constructor() {
+                this.action_to_nerve = {
+                    "lift": "hands",
+                    "walk": "legs",
+                    "talk": "lips",
+                    "eat": "mouth",
+                    "run": "fast legs",
+                    "sing": "mouth",
+                    "anger": "jaws",
+                    "carry": "hands",
+                    "swallow": "throat",
+                    "chew": "teeth and tongue",
+                };
+
+                this.nerve_codes = {
+                    "hands": "IMP_HANDS_001",
+                    "legs": "IMP_LEGS_002",
+                    "lips": "IMP_LIPS_003",
+                    "mouth": "IMP_MOUTH_004",
+                    "fast legs": "IMP_LEGS_FAST_005",
+                    "throat": "IMP_THROAT_006",
+                    "teeth and tongue": "IMP_TEETH_TONGUE_007",
+                    "jaws": "IMP_JAWS_008",
+                };
+            }
+
+            capture_thought(thought) {
+                return thought.toLowerCase();
+            }
+
+            convert_to_nerve_impulse(action) {
+                return this.action_to_nerve[action] || "UNKNOWN_ACTION";
+            }
+
+            get_nerve_code(nerve) {
+                return this.nerve_codes[nerve] || "UNKNOWN_NERVE";
+            }
+
+            async execute_motor_command(nerve_code) {
+                const output = document.getElementById('output');
+                const log = document.getElementById('commandLog');
+                
+                output.innerHTML = `🚀 Executing Motor Command: ${nerve_code}`;
+                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Executing: ${nerve_code}</div>`;
+                log.scrollTop = log.scrollHeight;
+                
+                // Simulate delay
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                
+                output.innerHTML += "<br>✅ Command executed.";
+                log.innerHTML += `<div>[${new Date().toLocaleTimeString()}] Command executed.</div>`;
+                log.scrollTop = log.scrollHeight;
+            }
+
+            async process_thought(thought) {
+                const action = this.capture_thought(thought);
+                const nerve = this.convert_to_nerve_impulse(action);
+                const nerve_code = this.get_nerve_code(nerve);
+                await this.execute_motor_command(nerve_code);
+            }
         }
 
-        self.nerve_codes = {
-            "hands": "IMP_HANDS_001",
-            "legs": "IMP_LEGS_002",
-            "lips": "IMP_LIPS_003",
-            "mouth": "IMP_MOUTH_004",
-            "fast legs": "IMP_LEGS_FAST_005",
-            "throat": "IMP_THROAT_006",
-            "teeth and tongue": "IMP_TEETH_TONGUE_007",
-            "jaws": "IMP_JAWS_008",
-            # ... extend with more codes
+        const codec = new MotorNeuronCodec();
+
+        function processThought() {
+            const thoughtInput = document.getElementById('thoughtInput');
+            const thought = thoughtInput.value.trim();
+            
+            if (thought) {
+                codec.process_thought(thought);
+                thoughtInput.value = '';
+            }
         }
 
-    def capture_thought(self, thought):
-        """Simulate capturing a thought from the Exit Point."""
-        return thought.lower()
-
-    def convert_to_nerve_impulse(self, action):
-        """Convert action potential to nerve impulse."""
-        return self.action_to_nerve.get(action, "UNKNOWN_ACTION")
-
-    def get_nerve_code(self, nerve):
-        """Get the nerve impulse code."""
-        return self.nerve_codes.get(nerve, "UNKNOWN_NERVE")
-
-    def execute_motor_command(self, nerve_code):
-        """Simulate sending the nerve impulse to the body."""
-        print(f"🚀 Executing Motor Command: {nerve_code}")
-        time.sleep(1)
-        print("✅ Command executed.")
-
-    def process_thought(self, thought):
-        """Full pipeline: thought -> action -> nerve impulse -> execution."""
-        action = self.capture_thought(thought)
-        nerve = self.convert_to_nerve_impulse(action)
-        nerve_code = self.get_nerve_code(nerve)
-        self.execute_motor_command(nerve_code)
-
-# Interactive CLI
-def main():
-    codec = MotorNeuronCodec()
-    print("=== 🧠 Motor Neuron Codec ===")
-    print("Available actions: lift, walk, talk, eat, run, sing, anger, carry, swallow, chew...")
-
-    while True:
-        thought = input("\nEnter a thought (e.g., 'lift'): ").strip()
-        if thought == "exit":
-            break
-        codec.process_thought(thought)
-
-if __name__ == "__main__":
-    main()
+        // Allow Enter key to submit
+        document.getElementById('thoughtInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                processThought();
+            }
+        });
+    </script>
+</body>
+</html>
